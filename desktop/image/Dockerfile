@@ -126,6 +126,15 @@ RUN curl -sL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh && \
 
 #RUN /code-server.sh 4.8.3 && sudo rm -f /code-server.sh
 
+RUN apt-get update && apt-get install -y openssh-server && \
+    mkdir -p /var/run/sshd && \
+    sed -i 's/^#Port 22/Port 3333/' /etc/ssh/sshd_config && \
+    echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config && \
+    echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
+    
+# set password for ubuntu user
+RUN echo "ubuntu:ubuntu" | chpasswd
+
 # setup user space
 RUN mkdir -p {/workspace,/app}
 
@@ -147,6 +156,8 @@ ENV HOME /home/${USERNAME}
 
 ENV SHELL /bin/bash
 
+ENV ROS_DOMAIN_ID=50
+
 #========== USER SPACE ==========#
 USER $USER
 
@@ -161,7 +172,8 @@ RUN rosdep fix-permissions && rosdep update
 
 # enable bash completion
 RUN echo "source /usr/share/bash-completion/bash_completion" >> ~/.bashrc && \
-    echo "source ~/.bashrc" >> ~/.bash_profile 
+    echo "source ~/.bashrc" >> ~/.bash_profile && \
+    echo "export ROS_DOMAIN_ID=50" >> ~/.bashrc
 
 # install ydlidar_sdk first
 #RUN cd ~ && \
@@ -200,7 +212,11 @@ COPY ./index.html /usr/share/novnc
 COPY ./app/install/code-server.sh /app/install/
 
 # install code-server cert.
-RUN /app/install/code-server.sh 4.98.2
+# RUN /app/install/code-server.sh 4.98.2 && \
+#     /usr/bin/code-server --install-extension ms-toolsai.jupyter
+
+# Install ipykernel for Python Jupyter support
+RUN pip3 install --break-system-packages ipykernel
 
 COPY ./app /app
 RUN sudo chown -R ${USERNAME}:${USERNAME} /app && \
@@ -211,17 +227,29 @@ RUN sudo chown -R ${USERNAME}:${USERNAME} /app && \
     echo "\n"
 
 # fix code-server cert.
-RUN /app/install/fix-code-server-cert.sh
+# RUN /app/install/fix-code-server-cert.sh
 
 VOLUME /tmp/.X11-unix
 
 ENV DISPLAY ":9"
 
-EXPOSE 8001 6901
+EXPOSE 8001 6901 3333
 
 # clean
 RUN sudo apt-get -y autoremove && \
     sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/*
+
+USER root
+# Install Miniconda
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    bash /tmp/miniconda.sh -b -p /opt/miniconda && \
+    rm /tmp/miniconda.sh && \
+    ln -s /opt/miniconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo "export PATH=/opt/miniconda/bin:$PATH" >> /etc/profile.d/conda.sh && \
+    echo "export PATH=/opt/miniconda/bin:$PATH" >> /etc/bash.bashrc
+USER $USER
+RUN /opt/miniconda/bin/conda init bash
+RUN echo "conda activate base" >> /home/ubuntu/.bashrc
 
 CMD ["sudo", "-E", "/usr/local/bin/supervisord", "-c", "/app/supervisord.conf"]

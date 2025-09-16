@@ -8,13 +8,14 @@ version: '3.8'
 
 volumes:
   workspace:
+    external: true
 
 services:
 
   ros2:
-    # build:
-    #   context: ./image
-    #   dockerfile: Dockerfile
+    build:
+      context: ./image
+      dockerfile: Dockerfile
     image: wn1980/ros2-jazzy${TAG}
     container_name: ros2_jazzy
     init: true
@@ -28,7 +29,7 @@ services:
       - "/run/systemd:/run/systemd"
       - "/etc/localtime:/etc/localtime:ro"
       - "workspace:/workspace"
-      - "~/.gitconfig:/home/ubuntu/.gitconfig"
+      # - "~/.gitconfig:/home/ubuntu/.gitconfig"
     healthcheck:
       test: ["CMD-SHELL", "test -e /tmp/.X11-unix/X9"]
       interval: "1m"
