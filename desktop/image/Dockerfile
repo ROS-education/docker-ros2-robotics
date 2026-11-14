@@ -104,6 +104,8 @@ ENV USER ${USERNAME}
 
 ENV HOME /home/${USERNAME}
 
+ENV PATH="/home/${USERNAME}/.gemini/bin:${PATH}"
+
 ENV SHELL /bin/bash
 
 ENV ROS_DOMAIN_ID=50
@@ -148,7 +150,8 @@ RUN /app/install/code-server.sh 4.23.1 && \
 RUN pip3 install --break-system-packages ipykernel
 
 COPY ./app /app
-RUN sudo chown -R ${USERNAME}:${USERNAME} /app && \
+RUN sudo python3 /app/install/patch-novnc.py && \
+    sudo chown -R ${USERNAME}:${USERNAME} /app && \
     sudo ln -sf /app/supervisord.conf /etc/supervisord.conf && \
     sudo usermod -aG dialout ${USERNAME} && \
     sudo usermod -aG video ${USERNAME} && \

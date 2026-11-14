@@ -44,7 +44,7 @@ fi
         feh --bg-center /app/bg.png 2>/dev/null || true
       fi
     fi
-    sleep 1
+    sleep 0.2
   done
 ) &
 

@@ -29,6 +29,7 @@ services:
       - "/run/systemd:/run/systemd"
       - "/etc/localtime:/etc/localtime:ro"
       - "workspace:/workspace"
+      - "${GEMINI_DIR:-~/.gemini}:/home/ubuntu/.gemini"
       # - "~/.gitconfig:/home/ubuntu/.gitconfig"
     healthcheck:
       test: ["CMD-SHELL", "test -e /tmp/.X11-unix/X9"]
