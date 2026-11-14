@@ -4,8 +4,7 @@ set -e
 
 if [ -z "$1" ]
   then
-    echo "Please provide version"
-    exit 0
+    VERSION=4.23.1
 else
     VERSION=$1
 fi
@@ -27,7 +26,7 @@ then
 fi
 
 FILE=code-server_${VERSION}_${ARCH}.deb
-wget https://github.com/cdr/code-server/releases/download/v${VERSION}/$FILE
+wget https://github.com/coder/code-server/releases/download/v${VERSION}/$FILE
 
 sudo apt update #&& sudo apt -y upgrade
 sudo apt install -y ./$FILE

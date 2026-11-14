@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_menu xmlns="http://openbox.org/3.4/menu">
+  <menu id="root-menu" label="Openbox 3">
+    <item label="Terminator">
+      <action name="Execute"><command>terminator</command></action>
+    </item>
+    <item label="File Manager (Xfe)">
+      <action name="Execute"><command>xfe</command></action>
+    </item>
+    <item label="X File Editor">
+      <action name="Execute"><command>xfwrite</command></action>
+    </item>
+    <item label="rqt">
+      <action name="Execute"><command>bash -c "source /opt/ros/${ROS_DISTRO:-lyrical}/setup.bash 2>/dev/null; exec rqt"</command></action>
+    </item>
+    <item label="RViz2">
+      <action name="Execute"><command>bash -c "source /opt/ros/${ROS_DISTRO:-lyrical}/setup.bash 2>/dev/null; exec rviz2"</command></action>
+    </item>
+    <separator />
+    <menu id="desktops-menu" label="Switch Desktop">
+      <item label="Desktop 1">
+        <action name="GoToDesktop"><to>1</to></action>
+      </item>
+      <item label="Desktop 2">
+        <action name="GoToDesktop"><to>2</to></action>
+      </item>
+      <item label="Desktop 3">
+        <action name="GoToDesktop"><to>3</to></action>
+      </item>
+      <item label="Desktop 4">
+        <action name="GoToDesktop"><to>4</to></action>
+      </item>
+    </menu>
+  </menu>
+</openbox_menu>
+

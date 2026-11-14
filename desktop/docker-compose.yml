@@ -16,8 +16,8 @@ services:
     build:
       context: ./image
       dockerfile: Dockerfile
-    image: wn1980/ros2-jazzy${TAG}
-    container_name: ros2_jazzy
+    image: wn1980/ros2-lyrical${TAG}
+    container_name: ros2_lyrical
     init: true
     restart: unless-stopped
     privileged: true
