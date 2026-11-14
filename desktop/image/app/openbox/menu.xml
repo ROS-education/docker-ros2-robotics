@@ -31,6 +31,21 @@
         <action name="GoToDesktop"><to>4</to></action>
       </item>
     </menu>
+    <separator />
+    <menu id="resolution-menu" label="Screen Resolution">
+      <item label="1920x1080 (1080p FHD)">
+        <action name="Execute"><command>xrandr -s 1920x1080</command></action>
+      </item>
+      <item label="1360x768 (Laptop)">
+        <action name="Execute"><command>xrandr -s 1360x768</command></action>
+      </item>
+      <item label="1280x720 (720p HD)">
+        <action name="Execute"><command>xrandr -s 1280x720</command></action>
+      </item>
+      <item label="1024x768 (XGA)">
+        <action name="Execute"><command>xrandr -s 1024x768</command></action>
+      </item>
+    </menu>
   </menu>
 </openbox_menu>
 

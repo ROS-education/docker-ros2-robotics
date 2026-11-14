@@ -104,7 +104,7 @@ ENV USER ${USERNAME}
 
 ENV HOME /home/${USERNAME}
 
-ENV PATH="/home/${USERNAME}/.gemini/bin:${PATH}"
+ENV PATH="/home/${USERNAME}/.local/bin:/home/${USERNAME}/.gemini/bin:${PATH}"
 
 ENV SHELL /bin/bash
 
@@ -143,11 +143,7 @@ COPY ./index.html /usr/share/novnc
 COPY ./app/install/code-server.sh /app/install/
 
 # install code-server
-RUN /app/install/code-server.sh 4.23.1 && \
-    /usr/bin/code-server --install-extension ms-toolsai.jupyter
-
-# Install ipykernel for Python Jupyter support
-RUN pip3 install --break-system-packages ipykernel
+RUN /app/install/code-server.sh 4.23.1
 
 COPY ./app /app
 RUN sudo python3 /app/install/patch-novnc.py && \
