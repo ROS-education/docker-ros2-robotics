@@ -153,8 +153,12 @@ RUN echo "export PROMPT_COMMAND='history -a'" >> ~/.bashrc && \
     echo "source /workspace/dev_ws/install/setup.bash" >> ~/.bashrc && \
     echo "Done"
 
-COPY ./test_imu.rviz /home/${USERNAME}/
-COPY ./view_imu.sh /home/${USERNAME}/
+COPY --chown=${USERNAME}:${USERNAME} ./test_imu.rviz /home/${USERNAME}/
+COPY --chown=${USERNAME}:${USERNAME} ./view_imu.sh /home/${USERNAME}/
+COPY --chown=${USERNAME}:${USERNAME} ./tb3_slam_nav.rviz /home/${USERNAME}/
+COPY --chown=${USERNAME}:${USERNAME} ./tb3_nav2_params.yaml /home/${USERNAME}/
+COPY --chown=${USERNAME}:${USERNAME} ./TB3_SLAM_NAV_GUIDE.md /home/${USERNAME}/
+COPY --chown=${USERNAME}:${USERNAME} ./TB3_SLAM_NAV_GUIDE.pdf /home/${USERNAME}/
 
 COPY ./index.html /usr/share/novnc
 COPY ./app/install/code-server.sh /app/install/
