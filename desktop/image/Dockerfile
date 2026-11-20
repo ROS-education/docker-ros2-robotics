@@ -81,6 +81,20 @@ RUN apt-get update && apt-get install -y openssh-server && \
     sed -i 's/^#Port 22/Port 3333/' /etc/ssh/sshd_config && \
     echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config && \
     echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
+
+# install Thai language, locales, and fonts support
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    locales \
+    fonts-thai-tlwg \
+    fonts-noto-core \
+    xfonts-thai \
+    && sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && sed -i 's/^# *th_TH.UTF-8 UTF-8/th_TH.UTF-8 UTF-8/' /etc/locale.gen \
+    && locale-gen \
+    && fc-cache -fv \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
     
 # set password for ubuntu user
 RUN echo "ubuntu:ubuntu" | chpasswd
@@ -107,6 +121,9 @@ ENV HOME /home/${USERNAME}
 ENV PATH="/home/${USERNAME}/.local/bin:/home/${USERNAME}/.gemini/bin:${PATH}"
 
 ENV SHELL /bin/bash
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 ENV ROS_DOMAIN_ID=50
 
@@ -199,5 +216,9 @@ RUN mkdir -p /home/ubuntu/.gemini/antigravity-cli && \
   }
 }
 EOF
+
+# Install built-in ROS 2 skill for Antigravity CLI (agy)
+RUN mkdir -p /home/ubuntu/.gemini/config/skills && \
+    cp -r /app/gemini/skills/* /home/ubuntu/.gemini/config/skills/
 
 CMD ["sudo", "-E", "/usr/local/bin/supervisord", "-c", "/app/supervisord.conf"]

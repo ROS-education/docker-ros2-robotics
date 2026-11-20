@@ -13,6 +13,9 @@ until xset q >/dev/null 2>&1; do
   sleep 0.2
 done
 
+# Configure US/Thai keyboard layout switching (Alt+Shift)
+setxkbmap -layout "us,th" -option "grp:alt_shift_toggle" 2>/dev/null || true
+
 # Setup default openbox config if not present
 mkdir -p "$HOME/.config/openbox"
 if [ ! -f "$HOME/.config/openbox/rc.xml" ] && [ -d /etc/xdg/openbox ]; then
@@ -31,6 +34,12 @@ fi
 mkdir -p "$HOME/.config/tint2"
 if [ -f /app/tint2/tint2rc ]; then
   cp /app/tint2/tint2rc "$HOME/.config/tint2/tint2rc"
+fi
+
+# Sync bundled Antigravity CLI skills into persistent ~/.gemini volume
+if [ -d /app/gemini/skills ]; then
+  mkdir -p "$HOME/.gemini/config/skills"
+  cp -r /app/gemini/skills/* "$HOME/.gemini/config/skills/" 2>/dev/null || true
 fi
 
 # Auto-refresh wallpaper when resolution changes
